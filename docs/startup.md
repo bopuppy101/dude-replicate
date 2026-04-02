@@ -129,16 +129,41 @@ To stop the middle tier:
 
 ---
 
-## Step 9 — Seed the test endpoints and jobs
+## Step 9 — Create endpoints and jobs
 
-The MVP ships with a SQL seed script that creates 3 database endpoints and 2 replication jobs for testing. All credentials are read from your environment variables — nothing is hardcoded.
+The MVP includes 3 database endpoints and 2 replication jobs. There are three ways to create them:
+
+### Option A: SQL seed script
+
+The most direct approach. Reads all credentials from your environment variables.
 
 ```bash
 source .env
 psql -h 127.0.0.1 -U postgres -d enterprise_dw -f seed/seed_endpoints_and_jobs.sql
 ```
 
-This creates:
+### Option B: Python seed script
+
+Same result, using the FastAPI service layer and pgcrypto encryption. The middle tier must be running.
+
+```bash
+source venv/bin/activate
+python seed/seed_endpoints_and_jobs.py
+```
+
+### Option C: The management UI
+
+Log in at http://localhost:5173, then:
+
+1. Go to **Endpoints** → click **+ Add Endpoint** → create each of the 3 endpoints:
+   - **SQL Server Source**: type=sqlserver, host=127.0.0.1, port=1433, database=EnterpriseDW, user=sa
+   - **Oracle Source**: type=oracle, host=127.0.0.1, port=1521, schema=REPLTEST, user=repltest, DSN=127.0.0.1:1521/FREEPDB1
+   - **PostgreSQL Target**: type=postgresql, host=127.0.0.1, port=5432, database=enterprise_dw, user=postgres
+2. Go to **Jobs** → click **+ New Job** → create each of the 2 jobs:
+   - **SQL Server to Postgres**: source=SQL Server Source, target=PostgreSQL Target, type=Full Load + CDC
+   - **Oracle to Postgres**: source=Oracle Source, target=PostgreSQL Target, type=Full Load + CDC
+
+### What gets created
 
 | Object | Type | Description |
 |--------|------|-------------|
@@ -148,21 +173,16 @@ This creates:
 | SQL Server to Postgres | Job | Full load + CDC from SQL Server to PostgreSQL |
 | Oracle to Postgres | Job | Full load + CDC from Oracle to PostgreSQL |
 
-### Verify the seed data
+### Verify
 
 From psql:
 
 ```sql
--- Check endpoints
 SELECT id, name, db_type, host, port FROM dude_replicate_meta.endpoints ORDER BY id;
-
--- Check jobs
 SELECT id, name, job_type, source_endpoint_id, target_endpoint_id FROM dude_replicate_meta.jobs ORDER BY id;
 ```
 
-Or from the UI: log in and check the **Endpoints** and **Jobs** pages.
-
-> **Note:** You can also create endpoints and jobs entirely through the UI — the seed script is a convenience for getting started quickly.
+Or from the UI: check the **Endpoints** and **Jobs** pages.
 
 ---
 

@@ -60,23 +60,25 @@ alembic -c server/migrations/alembic.ini upgrade head
 
 The middle tier starts on **http://localhost:8000**. On first startup it creates an admin account from `ADMIN_EMAIL`/`ADMIN_PASSWORD` in `.env`.
 
-### 2b. Seed the test endpoints and jobs
+### 2b. Create the test endpoints and jobs
 
-The MVP includes 3 endpoints and 2 jobs for testing. Seed them with SQL:
+The MVP includes 3 endpoints and 2 jobs. Three ways to create them:
 
+**Option A — SQL** (direct to database):
 ```bash
 source .env
 psql -h 127.0.0.1 -U postgres -d enterprise_dw -f seed/seed_endpoints_and_jobs.sql
 ```
 
-This creates:
-- **SQL Server Source** — connects to the SQL Server Docker container
-- **Oracle Source** — connects to the Oracle Docker container
-- **PostgreSQL Target** — connects to the PostgreSQL Docker container
-- **SQL Server to Postgres** job — full load + CDC
-- **Oracle to Postgres** job — full load + CDC
+**Option B — Python** (calls the API, middle tier must be running):
+```bash
+source .env && source venv/bin/activate
+python seed/seed_endpoints_and_jobs.py
+```
 
-All credentials are read from your environment variables (sourced from `.env`) and encrypted via pgcrypto. You can also create endpoints and jobs through the UI instead.
+**Option C — The UI**: Log in, go to **Endpoints** → **+ Add Endpoint** to create the 3 connections, then **Jobs** → **+ New Job** to create the 2 jobs. See [docs/startup.md](docs/startup.md) Step 9 for details.
+
+All three approaches create the same 5 objects — SQL Server Source, Oracle Source, PostgreSQL Target, and two `full_load_cdc` jobs wired between them.
 
 ### 3. Start the web UI
 
