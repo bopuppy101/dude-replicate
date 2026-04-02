@@ -58,9 +58,12 @@ alembic -c server/migrations/alembic.ini upgrade head
 ./repl-start
 ```
 
-The middle tier starts on **http://localhost:8000**. On first startup it creates:
+The middle tier starts on **http://localhost:8000**. On first startup it automatically creates:
 - An admin account (email/password from `.env`)
-- Seed data: 3 endpoints (SQL Server, Oracle, PostgreSQL) + 2 jobs
+- **3 database endpoints** — SQL Server Source, Oracle Source, PostgreSQL Target (credentials from `.env`)
+- **2 replication jobs** — "SQL Server to Postgres" and "Oracle to Postgres" (both `full_load_cdc` type)
+
+This means everything is pre-wired for testing. You don't need to manually configure any connections or jobs — just log in and start replicating.
 
 ### 3. Start the web UI
 
@@ -73,9 +76,14 @@ Open **http://localhost:5173** in your browser. Log in with the admin credential
 ### 4. Start replication
 
 From the UI:
-1. Go to **Jobs** — you'll see two pre-configured jobs
+1. Go to **Jobs** — you'll see two pre-configured jobs, both "stopped"
 2. Click a job name to open the detail page
-3. Click **Start CDC** (or **Full Load** to do an initial data load first)
+3. Choose an action:
+   - **Full Load + CDC** — loads all data from source, then starts real-time change capture
+   - **Start CDC** — starts change capture only (use after a full load has already been done)
+   - **Full Load Only** — reloads all data without starting CDC after
+
+> **Note:** Full loads truncate target tables before reloading.
 
 Or from the command line (standalone, without the UI):
 ```bash
@@ -83,6 +91,25 @@ source venv/bin/activate
 python src/sqlserver_full_load.py      # Initial data load
 python src/sqlserver_cdc.py daemon     # Start CDC polling
 ```
+
+---
+
+## Included Test Data
+
+The repo includes seed scripts that populate the source databases with realistic enterprise test data:
+
+```bash
+source venv/bin/activate
+python seed/sqlserver_seed.py    # 21 tables — Customers, Orders, Products, GL, Inventory, etc.
+python seed/oracle_seed.py       # 7 tables — Customers, Orders, Products, Employees, etc.
+```
+
+| Source | Tables | Rows | Examples |
+|--------|--------|------|---------|
+| SQL Server | 21 | ~82,000 | Customers, SalesOrders, Products, GLTransactions, Inventory, Employees, BillOfMaterials |
+| Oracle | 7 | ~11,000 | Customers, Orders, OrderLines, Products, Employees, AuditLog, VolumeTest |
+
+Combined with the pre-configured endpoints and jobs, this gives you a complete end-to-end test environment out of the box — seed the sources, click **Full Load + CDC** in the UI, and watch data flow into PostgreSQL in real time.
 
 ---
 
