@@ -2,44 +2,42 @@
 --
 -- Prerequisites:
 --   1. Alembic migrations have been run (alembic upgrade head)
---   2. An admin user exists in dude_replicate_meta.users (bootstrap creates one on first startup)
+--   2. An admin user exists in dude_replicate_meta.users
 --   3. pgcrypto extension is enabled (migrations handle this)
+--   4. Environment variables are set (source your .env first)
 --
 -- Usage:
---   Edit the passwords below to match your .env, then run:
+--   source .env
 --   psql -h 127.0.0.1 -U postgres -d enterprise_dw -f seed/seed_endpoints_and_jobs.sql
 --
--- The encryption key must match the ENCRYPTION_KEY in your .env file.
--- Replace 'your-encryption-key-here' with the actual value.
---
--- NOTE: This script is idempotent — it skips inserts if endpoints already exist.
+-- All credentials are read from environment variables — nothing is hardcoded.
 
 BEGIN;
 
 -- ============================================================
--- Configuration: set these to match your .env
+-- Read credentials from environment variables
 -- ============================================================
-\set encryption_key 'your-encryption-key-here'
-\set mssql_host     '127.0.0.1'
-\set mssql_port     1433
-\set mssql_user     'sa'
-\set mssql_pass     'your-mssql-password-here'
-\set mssql_db       'EnterpriseDW'
+\set encryption_key `echo "$ENCRYPTION_KEY"`
+\set mssql_host     `echo "${MSSQL_HOST:-127.0.0.1}"`
+\set mssql_port     `echo "${MSSQL_PORT:-1433}"`
+\set mssql_user     `echo "${MSSQL_USER:-sa}"`
+\set mssql_pass     `echo "$MSSQL_PASS"`
+\set mssql_db       `echo "${MSSQL_DB:-EnterpriseDW}"`
 
-\set oracle_host    '127.0.0.1'
-\set oracle_port    1521
-\set oracle_user    'repltest'
-\set oracle_pass    'your-oracle-password-here'
-\set oracle_sys_pass 'your-oracle-sys-password-here'
-\set oracle_pdb_dsn '127.0.0.1:1521/FREEPDB1'
-\set oracle_cdb_dsn '127.0.0.1:1521/FREE'
-\set oracle_schema  'REPLTEST'
+\set oracle_host    `echo "${ORACLE_HOST:-127.0.0.1}"`
+\set oracle_port    `echo "${ORACLE_PORT:-1521}"`
+\set oracle_user    `echo "${ORACLE_USER:-repltest}"`
+\set oracle_pass    `echo "$ORACLE_PASS"`
+\set oracle_sys_pass `echo "$ORACLE_SYS_PASS"`
+\set oracle_pdb_dsn `echo "${ORACLE_PDB_DSN:-127.0.0.1:1521/FREEPDB1}"`
+\set oracle_cdb_dsn `echo "${ORACLE_CDB_DSN:-127.0.0.1:1521/FREE}"`
+\set oracle_schema  `echo "${ORACLE_SCHEMA:-REPLTEST}"`
 
-\set pg_host        '127.0.0.1'
-\set pg_port        5432
-\set pg_user        'postgres'
-\set pg_pass        'your-pg-password-here'
-\set pg_db          'enterprise_dw'
+\set pg_host        `echo "${PG_HOST:-127.0.0.1}"`
+\set pg_port        `echo "${PG_PORT:-5432}"`
+\set pg_user        `echo "${PG_USER:-postgres}"`
+\set pg_pass        `echo "$PG_PASS"`
+\set pg_db          `echo "${PG_DB:-enterprise_dw}"`
 
 -- ============================================================
 -- Guard: skip if endpoints already exist
@@ -60,9 +58,9 @@ BEGIN
             RAISE EXCEPTION 'No admin user found. Start the middle tier first to bootstrap the admin account.';
         END IF;
 
-        -- ============================================================
+        -- ========================================
         -- Endpoint 1: SQL Server Source
-        -- ============================================================
+        -- ========================================
         INSERT INTO dude_replicate_meta.endpoints
             (name, db_type, host, port, database_name, schema_name,
              username_enc, password_enc,
@@ -76,9 +74,9 @@ BEGIN
             '{}', v_admin_id
         );
 
-        -- ============================================================
+        -- ========================================
         -- Endpoint 2: Oracle Source
-        -- ============================================================
+        -- ========================================
         INSERT INTO dude_replicate_meta.endpoints
             (name, db_type, host, port, database_name, schema_name,
              username_enc, password_enc,
@@ -93,9 +91,9 @@ BEGIN
             '{}', v_admin_id
         );
 
-        -- ============================================================
+        -- ========================================
         -- Endpoint 3: PostgreSQL Target
-        -- ============================================================
+        -- ========================================
         INSERT INTO dude_replicate_meta.endpoints
             (name, db_type, host, port, database_name, schema_name,
              username_enc, password_enc,
@@ -109,9 +107,9 @@ BEGIN
             '{}', v_admin_id
         );
 
-        -- ============================================================
+        -- ========================================
         -- Job 1: SQL Server to Postgres
-        -- ============================================================
+        -- ========================================
         INSERT INTO dude_replicate_meta.jobs
             (name, source_endpoint_id, target_endpoint_id, job_type,
              poll_interval, batch_size, extra_config, created_by)
@@ -122,9 +120,9 @@ BEGIN
             'full_load_cdc',
             0.5, 1000, '{}', v_admin_id;
 
-        -- ============================================================
+        -- ========================================
         -- Job 2: Oracle to Postgres
-        -- ============================================================
+        -- ========================================
         INSERT INTO dude_replicate_meta.jobs
             (name, source_endpoint_id, target_endpoint_id, job_type,
              poll_interval, batch_size, extra_config, created_by)
