@@ -29,7 +29,7 @@ def _build_job_out(job: Job, runtime: JobRuntime | None) -> JobOut:
         target_endpoint_id=job.target_endpoint_id,
         job_type=job.job_type,
         table_list=job.table_list,
-        poll_interval=job.poll_interval,
+
         batch_size=job.batch_size,
         extra_config=job.extra_config,
         created_at=job.created_at,

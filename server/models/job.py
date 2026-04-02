@@ -1,7 +1,7 @@
 """Job ORM model."""
 
 from datetime import datetime, timezone
-from sqlalchemy import String, Integer, Float, DateTime, ForeignKey
+from sqlalchemy import String, Integer, DateTime, ForeignKey
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -18,7 +18,6 @@ class Job(Base):
     target_endpoint_id: Mapped[int] = mapped_column(Integer, ForeignKey(f"{SCHEMA}.endpoints.id"), nullable=False)
     job_type: Mapped[str] = mapped_column(String(20), nullable=False)  # full_load | cdc | full_load_cdc
     table_list: Mapped[list | None] = mapped_column(JSONB)  # null = all tables
-    poll_interval: Mapped[float] = mapped_column(Float, default=0.5, nullable=False)
     batch_size: Mapped[int] = mapped_column(Integer, default=1000, nullable=False)
     extra_config: Mapped[dict | None] = mapped_column(JSONB, default=dict)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))

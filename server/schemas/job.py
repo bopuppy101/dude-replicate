@@ -10,7 +10,6 @@ class JobCreate(BaseModel):
     target_endpoint_id: int
     job_type: str  # full_load | cdc | full_load_cdc
     table_list: list[str] | None = None
-    poll_interval: float = 0.5
     batch_size: int = 1000
     extra_config: dict | None = None
 
@@ -21,7 +20,6 @@ class JobUpdate(BaseModel):
     target_endpoint_id: int | None = None
     job_type: str | None = None
     table_list: list[str] | None = None
-    poll_interval: float | None = None
     batch_size: int | None = None
     extra_config: dict | None = None
 
@@ -40,7 +38,6 @@ class JobOut(BaseModel):
     target_endpoint_id: int
     job_type: str
     table_list: list[str] | None
-    poll_interval: float
     batch_size: int
     extra_config: dict | None
     created_at: datetime

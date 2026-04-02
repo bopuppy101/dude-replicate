@@ -6,7 +6,7 @@ import { useJobMetrics } from '../api/websocket';
 interface Job {
   id: number; name: string; source_endpoint_id: number; target_endpoint_id: number;
   job_type: string; status: string; pid: number | null; started_at: string | null;
-  table_list: string[] | null; poll_interval: number; batch_size: number;
+  table_list: string[] | null; batch_size: number;
   current_run_id: number | null; heartbeat_at: string | null;
   checkpoint: string | null; live_metrics: Record<string, unknown> | null;
 }
@@ -311,7 +311,7 @@ export default function JobDetail() {
           <h3 className="text-sm font-semibold text-text-secondary mb-3">Configuration</h3>
           <div className="space-y-2 text-sm">
             <ConfigRow label="Job Type" value={job.job_type.replace(/_/g, ' ')} />
-            <ConfigRow label="Poll Interval" value={`${job.poll_interval}s`} />
+            <ConfigRow label="Poll Interval" value="0.5s" />
             <ConfigRow label="Batch Size" value={job.batch_size.toLocaleString()} />
             <ConfigRow label="Tables" value={job.table_list?.join(', ') || 'All tables'} />
             {job.heartbeat_at && (

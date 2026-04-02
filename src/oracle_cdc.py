@@ -46,7 +46,7 @@ PG_USER   = os.getenv('PG_USER', 'postgres')
 PG_PASS   = os.getenv('PG_PASS', '')
 PG_SCHEMA = os.getenv('PG_TARGET_SCHEMA', 'oracle_dw')
 
-POLL_INTERVAL       = 1.0   # seconds between polls
+POLL_INTERVAL       = 0.5   # seconds between polls
 CHECKPOINT_DIR      = os.path.join(os.path.dirname(__file__), '..', 'cdc-checkpoints')
 SCN_CHECKPOINT_FILE = os.getenv('CDC_SCN_CHECKPOINT', os.path.join(CHECKPOINT_DIR, 'oracle_cdc_scn.txt'))
 

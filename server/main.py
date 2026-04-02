@@ -100,7 +100,6 @@ async def bootstrap_seed_data():
             source_endpoint_id=mssql_ep["id"],
             target_endpoint_id=pg_ep["id"],
             job_type="full_load_cdc",
-            poll_interval=0.5,
             batch_size=1000,
             created_by=admin_id,
         )
@@ -112,7 +111,6 @@ async def bootstrap_seed_data():
             source_endpoint_id=oracle_ep["id"],
             target_endpoint_id=pg_ep["id"],
             job_type="full_load_cdc",
-            poll_interval=1.0,
             batch_size=1000,
             created_by=admin_id,
         )

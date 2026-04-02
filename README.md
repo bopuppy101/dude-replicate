@@ -135,8 +135,10 @@ Combined with the pre-configured endpoints and jobs, this gives you a complete e
 The proven replication engine — standalone Python scripts that don't depend on the UI:
 
 - **SQL Server → PostgreSQL**: Uses Change Tracking (CT). Polls every 0.5s. Checkpoints stored in SQLite.
-- **Oracle → PostgreSQL**: Uses LogMiner via SYS/CDB connection. Polls every 1s. SCN checkpoint in a text file.
+- **Oracle → PostgreSQL**: Uses LogMiner via SYS/CDB connection. Polls every 0.5s. SCN checkpoint in a text file.
 - **Full Load**: Schema discovery + bulk data copy with type mapping and FK ordering.
+
+> **Polling frequency** is currently hardcoded at 0.5 seconds for both engines. This is appropriate for most workloads. For very high-volume source databases, a configurable poll interval is a planned enhancement — the right frequency depends on how active your source database is.
 
 ### Management UI (`server/` + `web/`)
 

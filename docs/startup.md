@@ -219,7 +219,6 @@ Go to **Jobs** → click **+ New Job**:
 | Source Endpoint | `SQL Server Source (sqlserver)` |
 | Target Endpoint | `PostgreSQL Target (postgresql)` |
 | Tables | *(leave blank for all tables)* |
-| Poll Interval | `0.5` |
 
 Click **Create Job**.
 
@@ -234,7 +233,6 @@ Click **+ New Job** again:
 | Source Endpoint | `Oracle Source (oracle)` |
 | Target Endpoint | `PostgreSQL Target (postgresql)` |
 | Tables | *(leave blank for all tables)* |
-| Poll Interval | `1` |
 
 Click **Create Job**.
 

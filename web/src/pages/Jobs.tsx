@@ -6,7 +6,7 @@ import { useAuth } from '../auth/AuthContext';
 
 interface Job {
   id: number; name: string; source_endpoint_id: number; target_endpoint_id: number;
-  job_type: string; table_list: string[] | null; poll_interval: number; batch_size: number;
+  job_type: string; table_list: string[] | null; batch_size: number;
   status: string; pid: number | null; started_at: string | null;
   current_run_id: number | null; heartbeat_at: string | null;
   checkpoint: string | null; live_metrics: Record<string, unknown> | null;
@@ -23,7 +23,7 @@ const statusBadge: Record<string, string> = {
 
 const emptyForm = {
   name: '', source_endpoint_id: 0, target_endpoint_id: 0,
-  job_type: 'cdc', table_list: '', poll_interval: 0.5, batch_size: 1000,
+  job_type: 'cdc', table_list: '', batch_size: 1000,
 };
 
 export default function Jobs() {
@@ -122,12 +122,6 @@ export default function Jobs() {
               <label className="block text-sm text-text-secondary mb-1.5 font-medium">Tables (comma-separated, blank = all)</label>
               <input value={form.table_list} onChange={(e) => setForm({ ...form, table_list: e.target.value })}
                 placeholder="Customers, Orders, Products"
-                className="w-full px-3 py-2 bg-surface-2 border border-surface-3 rounded-md text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent transition-colors" />
-            </div>
-            <div>
-              <label className="block text-sm text-text-secondary mb-1.5 font-medium">Poll Interval (sec)</label>
-              <input type="number" step="0.1" value={form.poll_interval}
-                onChange={(e) => setForm({ ...form, poll_interval: parseFloat(e.target.value) })}
                 className="w-full px-3 py-2 bg-surface-2 border border-surface-3 rounded-md text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent transition-colors" />
             </div>
           </div>

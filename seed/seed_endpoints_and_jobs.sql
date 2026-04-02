@@ -112,26 +112,26 @@ BEGIN
         -- ========================================
         INSERT INTO dude_replicate_meta.jobs
             (name, source_endpoint_id, target_endpoint_id, job_type,
-             poll_interval, batch_size, extra_config, created_by)
+             batch_size, extra_config, created_by)
         SELECT
             'SQL Server to Postgres',
             (SELECT id FROM dude_replicate_meta.endpoints WHERE name = 'SQL Server Source'),
             (SELECT id FROM dude_replicate_meta.endpoints WHERE name = 'PostgreSQL Target'),
             'full_load_cdc',
-            0.5, 1000, '{}', v_admin_id;
+            1000, '{}', v_admin_id;
 
         -- ========================================
         -- Job 2: Oracle to Postgres
         -- ========================================
         INSERT INTO dude_replicate_meta.jobs
             (name, source_endpoint_id, target_endpoint_id, job_type,
-             poll_interval, batch_size, extra_config, created_by)
+             batch_size, extra_config, created_by)
         SELECT
             'Oracle to Postgres',
             (SELECT id FROM dude_replicate_meta.endpoints WHERE name = 'Oracle Source'),
             (SELECT id FROM dude_replicate_meta.endpoints WHERE name = 'PostgreSQL Target'),
             'full_load_cdc',
-            1.0, 1000, '{}', v_admin_id;
+            1000, '{}', v_admin_id;
 
         RAISE NOTICE 'Seed complete: 3 endpoints + 2 jobs created.';
     END;

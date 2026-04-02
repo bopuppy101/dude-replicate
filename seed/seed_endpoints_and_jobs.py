@@ -113,7 +113,6 @@ def main():
         "source_endpoint_id": ep1["id"],
         "target_endpoint_id": ep3["id"],
         "job_type": "full_load_cdc",
-        "poll_interval": 0.5,
         "batch_size": 1000,
     })
     print(f"  SQL Server to Postgres: id={job1['id']}" if job1 else "  FAILED")
@@ -123,7 +122,6 @@ def main():
         "source_endpoint_id": ep2["id"],
         "target_endpoint_id": ep3["id"],
         "job_type": "full_load_cdc",
-        "poll_interval": 1.0,
         "batch_size": 1000,
     })
     print(f"  Oracle to Postgres: id={job2['id']}" if job2 else "  FAILED")
