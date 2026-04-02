@@ -6,6 +6,14 @@ Built by [DBDude Inc](https://dbdude.net).
 
 ---
 
+## Why Dude Replicate
+
+Getting data out of SQL Server and Oracle and into PostgreSQL shouldn't require an enterprise ETL platform, a six-figure license, or a team of consultants. Dude Replicate does one thing well: it clones your source schemas into PostgreSQL-compatible schemas, bulk-loads every row, and then keeps the target in sync — inserts, updates, and deletes — in real time through change data capture.
+
+The replication engine discovers source tables, maps vendor-specific data types to their PostgreSQL equivalents, resolves foreign key dependencies, and loads data in the correct order. Once the initial load is complete, lightweight CDC daemons poll for incremental changes — SQL Server via Change Tracking, Oracle via LogMiner — and apply them continuously with sub-second latency. A browser-based management console lets you configure connections, launch jobs, and monitor throughput and lag from a single pane of glass, without touching the command line.
+
+---
+
 ## What It Does
 
 ```
