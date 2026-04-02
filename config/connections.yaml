@@ -1,0 +1,26 @@
+# Dude-Replicate connection configuration template
+# Copy this file to connections.local.yaml and fill in real credentials.
+# DO NOT commit connections.local.yaml — it contains secrets.
+
+sqlserver:
+  host: 127.0.0.1
+  port: 1433
+  user: sa
+  password: "<MSSQL_SA_PASSWORD>"
+  database: EnterpriseDW
+
+postgres:
+  host: 127.0.0.1
+  port: 5432
+  user: postgres
+  password: ""
+  database: enterprise_dw
+
+oracle:
+  cdb_dsn: "127.0.0.1:1521/FREE"
+  sys_user: sys
+  sys_password: "<ORACLE_SYS_PASSWORD>"
+  pdb_dsn: "127.0.0.1:1521/FREEPDB1"
+  app_user: repltest
+  app_password: "<ORACLE_APP_PASSWORD>"
+  schema: REPLTEST

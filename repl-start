@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Start the Dude Replicate middle tier
+set -e
+
+DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$DIR"
+
+# Check if already running
+if lsof -ti:8000 >/dev/null 2>&1; then
+    echo "Middle tier is already running on port 8000 (PID $(lsof -ti:8000))"
+    exit 1
+fi
+
+# Activate venv and start
+source "$DIR/venv/bin/activate"
+echo "Starting Dude Replicate middle tier on http://localhost:8000 ..."
+nohup uvicorn server.main:app --host 0.0.0.0 --port 8000 > /tmp/dude_replicate_server.log 2>&1 &
+PID=$!
+sleep 2
+
+# Verify it started
+if kill -0 "$PID" 2>/dev/null; then
+    echo "Middle tier running (PID $PID)"
+    echo "Log: /tmp/dude_replicate_server.log"
+else
+    echo "Failed to start. Check /tmp/dude_replicate_server.log"
+    exit 1
+fi

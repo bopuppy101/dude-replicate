@@ -1,0 +1,42 @@
+# Credentials
+.env
+
+# Claude Code context files
+CCContext-*.md
+connections.local.yaml
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# Checkpoint / state files
+cdc-checkpoints/*
+!cdc-checkpoints/.gitkeep
+*.pid
+*.log
+/tmp/
+
+# Docker volumes / data
+sqlserver_data/
+postgres_data/
+oracle_data/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Node / Frontend
+node_modules/
+web/dist/
+web/.vite/
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ── Design Tokens ── */
+@theme {
+  /* Surface hierarchy (dark mode) */
+  --color-surface-0: #0a0e17;
+  --color-surface-1: #111827;
+  --color-surface-2: #1e293b;
+  --color-surface-3: #334155;
+
+  /* Brand accent — cyan/teal: says "data infrastructure" */
+  --color-accent: #06b6d4;
+  --color-accent-hover: #22d3ee;
+  --color-accent-muted: rgba(6, 182, 212, 0.15);
+
+  /* Semantic status */
+  --color-status-running: #22c55e;
+  --color-status-idle: #64748b;
+  --color-status-error: #ef4444;
+  --color-status-warning: #eab308;
+  --color-status-completed: #06b6d4;
+
+  /* Text hierarchy */
+  --color-text-primary: #f1f5f9;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+
+  /* Font stacks */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
+}
+
+/* ── Base Styles ── */
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-surface-0);
+  color: var(--color-text-primary);
+
+  /* Subtle dot-grid background — control room feel */
+  background-image: radial-gradient(
+    circle,
+    rgba(148, 163, 184, 0.06) 1px,
+    transparent 1px
+  );
+  background-size: 24px 24px;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* ── Selection ── */
+::selection {
+  background-color: rgba(6, 182, 212, 0.3);
+  color: #f1f5f9;
+}
+
+/* ── Scrollbar (Webkit) ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-surface-3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* ── Keyframes ── */
+@keyframes flowRight {
+  0% { left: 0; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { left: calc(100% - 12px); opacity: 0; }
+}
+
+@keyframes pulse-status {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
