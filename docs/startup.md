@@ -153,15 +153,90 @@ python seed/seed_endpoints_and_jobs.py
 
 ### Option C: The management UI
 
-Log in at http://localhost:5173, then:
+Log in at http://localhost:5173 with your admin credentials, then create the endpoints and jobs through the browser.
 
-1. Go to **Endpoints** → click **+ Add Endpoint** → create each of the 3 endpoints:
-   - **SQL Server Source**: type=sqlserver, host=127.0.0.1, port=1433, database=EnterpriseDW, user=sa
-   - **Oracle Source**: type=oracle, host=127.0.0.1, port=1521, schema=REPLTEST, user=repltest, DSN=127.0.0.1:1521/FREEPDB1
-   - **PostgreSQL Target**: type=postgresql, host=127.0.0.1, port=5432, database=enterprise_dw, user=postgres
-2. Go to **Jobs** → click **+ New Job** → create each of the 2 jobs:
-   - **SQL Server to Postgres**: source=SQL Server Source, target=PostgreSQL Target, type=Full Load + CDC
-   - **Oracle to Postgres**: source=Oracle Source, target=PostgreSQL Target, type=Full Load + CDC
+#### Endpoint 1: SQL Server Source
+
+Go to **Endpoints** → click **+ Add Endpoint** and fill in:
+
+| Field | Value |
+|-------|-------|
+| Name | `SQL Server Source` |
+| Type | `SQL Server` |
+| Host | `127.0.0.1` |
+| Port | `1433` |
+| Database / Service | `EnterpriseDW` |
+| Schema | *(leave blank)* |
+| Username | `sa` |
+| Password | *(your SQL Server SA password from .env)* |
+
+Click **Test Connection** to verify, then **Save**.
+
+#### Endpoint 2: Oracle Source
+
+Click **+ Add Endpoint** again:
+
+| Field | Value |
+|-------|-------|
+| Name | `Oracle Source` |
+| Type | `Oracle` |
+| Host | `127.0.0.1` |
+| Port | `1521` |
+| Database / Service | *(leave blank)* |
+| Schema | `REPLTEST` |
+| Username | `repltest` |
+| Password | *(your Oracle repltest password from .env)* |
+| Oracle DSN (PDB) | `127.0.0.1:1521/FREEPDB1` |
+| Oracle CDB DSN | `127.0.0.1:1521/FREE` |
+
+Click **Test Connection** to verify, then **Save**.
+
+#### Endpoint 3: PostgreSQL Target
+
+Click **+ Add Endpoint** again:
+
+| Field | Value |
+|-------|-------|
+| Name | `PostgreSQL Target` |
+| Type | `PostgreSQL` |
+| Host | `127.0.0.1` |
+| Port | `5432` |
+| Database / Service | `enterprise_dw` |
+| Schema | *(leave blank)* |
+| Username | `postgres` |
+| Password | *(your PostgreSQL password from .env)* |
+
+Click **Test Connection** to verify, then **Save**.
+
+#### Job 1: SQL Server to Postgres
+
+Go to **Jobs** → click **+ New Job**:
+
+| Field | Value |
+|-------|-------|
+| Name | `SQL Server to Postgres` |
+| Type | `Full Load + CDC` |
+| Source Endpoint | `SQL Server Source (sqlserver)` |
+| Target Endpoint | `PostgreSQL Target (postgresql)` |
+| Tables | *(leave blank for all tables)* |
+| Poll Interval | `0.5` |
+
+Click **Create Job**.
+
+#### Job 2: Oracle to Postgres
+
+Click **+ New Job** again:
+
+| Field | Value |
+|-------|-------|
+| Name | `Oracle to Postgres` |
+| Type | `Full Load + CDC` |
+| Source Endpoint | `Oracle Source (oracle)` |
+| Target Endpoint | `PostgreSQL Target (postgresql)` |
+| Tables | *(leave blank for all tables)* |
+| Poll Interval | `1` |
+
+Click **Create Job**.
 
 ### What gets created
 
