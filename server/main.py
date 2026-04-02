@@ -163,8 +163,6 @@ async def lifespan(app: FastAPI):
     # Migrations are run manually: alembic upgrade head
     logger.info("Checking for admin bootstrap...")
     await bootstrap_admin()
-    logger.info("Checking for seed data...")
-    await bootstrap_seed_data()
     logger.info("Checking for stale runtimes...")
     await cleanup_stale_runtimes()
     # Start WebSocket metrics push loop

@@ -58,12 +58,25 @@ alembic -c server/migrations/alembic.ini upgrade head
 ./repl-start
 ```
 
-The middle tier starts on **http://localhost:8000**. On first startup it automatically creates:
-- An admin account (email/password from `.env`)
-- **3 database endpoints** — SQL Server Source, Oracle Source, PostgreSQL Target (credentials from `.env`)
-- **2 replication jobs** — "SQL Server to Postgres" and "Oracle to Postgres" (both `full_load_cdc` type)
+The middle tier starts on **http://localhost:8000**. On first startup it creates an admin account from `ADMIN_EMAIL`/`ADMIN_PASSWORD` in `.env`.
 
-This means everything is pre-wired for testing. You don't need to manually configure any connections or jobs — just log in and start replicating.
+### 2b. Seed the test endpoints and jobs
+
+The MVP includes 3 endpoints and 2 jobs for testing. Seed them with SQL:
+
+```bash
+source .env
+psql -h 127.0.0.1 -U postgres -d enterprise_dw -f seed/seed_endpoints_and_jobs.sql
+```
+
+This creates:
+- **SQL Server Source** — connects to the SQL Server Docker container
+- **Oracle Source** — connects to the Oracle Docker container
+- **PostgreSQL Target** — connects to the PostgreSQL Docker container
+- **SQL Server to Postgres** job — full load + CDC
+- **Oracle to Postgres** job — full load + CDC
+
+All credentials are read from your environment variables (sourced from `.env`) and encrypted via pgcrypto. You can also create endpoints and jobs through the UI instead.
 
 ### 3. Start the web UI
 

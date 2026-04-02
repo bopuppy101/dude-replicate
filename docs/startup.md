@@ -119,10 +119,7 @@ cd ..
 ./repl-start
 ```
 
-This starts the FastAPI backend on **http://localhost:8000**. On first startup it automatically:
-- Creates the admin account (from `ADMIN_EMAIL`/`ADMIN_PASSWORD` in `.env`)
-- Seeds 3 database endpoints (SQL Server, Oracle, PostgreSQL)
-- Seeds 2 replication jobs (SQL Server to Postgres, Oracle to Postgres)
+This starts the FastAPI backend on **http://localhost:8000**. On first startup it creates the admin account from `ADMIN_EMAIL`/`ADMIN_PASSWORD` in `.env`.
 
 To stop the middle tier:
 
@@ -132,7 +129,44 @@ To stop the middle tier:
 
 ---
 
-## Step 9 — Start the web UI
+## Step 9 — Seed the test endpoints and jobs
+
+The MVP ships with a SQL seed script that creates 3 database endpoints and 2 replication jobs for testing. All credentials are read from your environment variables — nothing is hardcoded.
+
+```bash
+source .env
+psql -h 127.0.0.1 -U postgres -d enterprise_dw -f seed/seed_endpoints_and_jobs.sql
+```
+
+This creates:
+
+| Object | Type | Description |
+|--------|------|-------------|
+| SQL Server Source | Endpoint | Connects to the SQL Server Docker container (port 1433) |
+| Oracle Source | Endpoint | Connects to the Oracle Docker container (port 1521) |
+| PostgreSQL Target | Endpoint | Connects to the PostgreSQL Docker container (port 5432) |
+| SQL Server to Postgres | Job | Full load + CDC from SQL Server to PostgreSQL |
+| Oracle to Postgres | Job | Full load + CDC from Oracle to PostgreSQL |
+
+### Verify the seed data
+
+From psql:
+
+```sql
+-- Check endpoints
+SELECT id, name, db_type, host, port FROM dude_replicate_meta.endpoints ORDER BY id;
+
+-- Check jobs
+SELECT id, name, job_type, source_endpoint_id, target_endpoint_id FROM dude_replicate_meta.jobs ORDER BY id;
+```
+
+Or from the UI: log in and check the **Endpoints** and **Jobs** pages.
+
+> **Note:** You can also create endpoints and jobs entirely through the UI — the seed script is a convenience for getting started quickly.
+
+---
+
+## Step 10 — Start the web UI
 
 For development:
 
@@ -153,7 +187,7 @@ npm run build
 
 ---
 
-## Step 10 — Start replication from the UI
+## Step 11 — Start replication from the UI
 
 1. Open the **Dashboard** — you'll see two pre-configured jobs, both "stopped"
 2. Click a job name (e.g., "Oracle to Postgres") to open the detail page
